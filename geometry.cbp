@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="geometry" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/libgeometry" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-fPIC" />
+					<Add directory="../geometry" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/libgeometry" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-fPIC" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add directory="include" />
+		</Compiler>
+		<Unit filename="include/Dirtable.h" />
+		<Unit filename="include/Ellipse.h" />
+		<Unit filename="include/EllipseSegment.h" />
+		<Unit filename="include/GenericArc.h" />
+		<Unit filename="include/GenericEllipse.h" />
+		<Unit filename="include/GenericLine.h" />
+		<Unit filename="include/GenericRect.h" />
+		<Unit filename="include/GenericShapeElement.h" />
+		<Unit filename="include/GeometryExceptions.h" />
+		<Unit filename="include/Helpers.h" />
+		<Unit filename="include/Limits.h" />
+		<Unit filename="include/LineBasedShape.h" />
+		<Unit filename="include/LineSegment.h" />
+		<Unit filename="include/Math.h" />
+		<Unit filename="include/Point2D.h" />
+		<Unit filename="include/PointerAllocator.h" />
+		<Unit filename="include/Rectangle.h" />
+		<Unit filename="include/Segment.h" />
+		<Unit filename="include/SegmentPoint.h" />
+		<Unit filename="include/SegmentPointVector.h" />
+		<Unit filename="include/SegmentedShape.h" />
+		<Unit filename="include/Shape.h" />
+		<Unit filename="include/Triangle.h" />
+		<Unit filename="src/Dirtable.cpp" />
+		<Unit filename="src/Ellipse.cpp" />
+		<Unit filename="src/EllipseSegment.cpp" />
+		<Unit filename="src/GenericArc.cpp" />
+		<Unit filename="src/GenericEllipse.cpp" />
+		<Unit filename="src/GenericLine.cpp" />
+		<Unit filename="src/GenericRect.cpp" />
+		<Unit filename="src/GenericShapeElement.cpp" />
+		<Unit filename="src/LineBasedShape.cpp" />
+		<Unit filename="src/LineSegment.cpp" />
+		<Unit filename="src/Math.cpp" />
+		<Unit filename="src/Point2D.cpp" />
+		<Unit filename="src/Rectangle.cpp" />
+		<Unit filename="src/Segment.cpp" />
+		<Unit filename="src/SegmentPoint.cpp" />
+		<Unit filename="src/SegmentPointVector.cpp" />
+		<Unit filename="src/SegmentedShape.cpp" />
+		<Unit filename="src/Shape.cpp" />
+		<Unit filename="src/Triangle.cpp" />
+		<Extensions>
+			<envvars />
+			<code_completion />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
