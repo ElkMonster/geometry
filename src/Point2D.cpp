@@ -22,6 +22,7 @@ Point2D::Point2D(float x, float y)
 Point2D::~Point2D()
 {}
 
+
 Point2D::Point2D(const Point2D& other)
 :   x(other.x),
     y(other.y)
@@ -57,6 +58,7 @@ Point2D::operator-=(const Point2D& rhs)
     return *this;
 }
 
+
 Point2D&
 Point2D::operator*=(const Point2D& rhs)
 {
@@ -82,6 +84,7 @@ Point2D::operator*=(float factor)
     this->y *= factor;
     return *this;
 }
+
 
 Point2D&
 Point2D::operator/=(float divisor)
@@ -117,6 +120,13 @@ const Point2D
 Point2D::operator/(const Point2D& other) const
 {
     return Point2D(*this) /= other;
+}
+
+
+const Point2D
+Point2D::operator*(float factor) const
+{
+    return Point2D(*this) *= factor;
 }
 
 
