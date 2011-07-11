@@ -98,6 +98,17 @@ Ellipse::toSegmentedShape() const
 
 
 bool
+Ellipse::containsPoint(const Point2D& p) const
+{
+    CLEAN_IF_DIRTY(this);
+
+    Point2D p0 = (p - center_);
+    p0 = (p0 * p0) / radius_;
+    return (p0.x + p0.y) <= 1.f;
+}
+
+
+bool
 Ellipse::isIntersectedByLineBasedShape(
     const LineBasedShape* s,
     SegmentPointVector& isecPoints,

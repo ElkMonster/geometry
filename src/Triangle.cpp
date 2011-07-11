@@ -97,4 +97,38 @@ Triangle::getNumLines() const
 }
 
 
+bool
+Triangle::containsPoint(const Point2D& p) const
+{
+    CLEAN_IF_DIRTY(this);
+
+    if (bb().containsPoint(p))
+    {
+        // Solve eq.: p = p0 + s * v1 + t * v2; point is inside triangle if
+        // s, t = [0, 1] and (s + t) = [0, 1].
+        // To solve, make two equations:
+        // (I) (p - p0) * v1 = (s * v1 + t * v2) * v1
+        // (I) (p - p0) * v2 = (s * v1 + t * v2) * v2
+        // which allows us to calculate the two unknowns s and t
+
+        Point2D v0(p - p1_);
+        Point2D v1(p2_ - p1_);
+        Point2D v2(p3_ - p1_);
+
+        float d02 = dot(v0, v2);
+        float d01 = dot(v0, v1);
+        float d11 = dot(v1, v1);
+        float d12 = dot(v1, v2);
+        float d22 = dot(v2, v2);
+
+        float t = (d02 - d01 * d12 / d11) / (d22 - d12 * d12 / d11);
+        float s = (d01 - t * d12) / d11;
+
+        return between(s, 0.f, 1.f) && between(t, 0.f, 1.f) && ((s + t) <= 1.f);
+    }
+
+    return false;
+}
+
+
 } // namespace geom

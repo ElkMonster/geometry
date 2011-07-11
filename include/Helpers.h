@@ -52,6 +52,12 @@ inline bool listContainsPoint(const SegmentPoint* const list[],
 }
 
 
+inline float dot(const Point2D& v1, const Point2D& v2)
+{
+    return v1.x * v2.x + v1.y * v2.y;
+}
+
+
 } // namespace geom
 
 #endif // HELPERS_H_

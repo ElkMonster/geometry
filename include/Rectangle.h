@@ -33,6 +33,8 @@ public:
 
     SegmentedShape* toSegmentedShape() const;
 
+    bool containsPoint(const Point2D& p) const;
+
 private:
 
     GenericRect r_;

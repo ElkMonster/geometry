@@ -33,6 +33,8 @@ public:
 
     int getNumLines() const;
 
+    bool containsPoint(const Point2D& p) const;
+
 protected:
 
     void calculateBoundingBox(GenericRect& bb) const;

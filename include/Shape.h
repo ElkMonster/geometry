@@ -42,6 +42,8 @@ public:
 
     virtual SegmentedShape* toSegmentedShape() const = 0;
 
+    virtual bool containsPoint(const Point2D& p) const = 0;
+
 protected:
 
     virtual bool isIntersectedByRectangle(const Rectangle* r,

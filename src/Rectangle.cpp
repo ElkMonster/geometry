@@ -77,4 +77,13 @@ Rectangle::getNumLines() const
 }
 
 
+bool
+Rectangle::containsPoint(const Point2D& p) const
+{
+    CLEAN_IF_DIRTY(this);
+
+    return r_.containsPoint(p);
+}
+
+
 } // namespace geom

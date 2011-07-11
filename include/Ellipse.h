@@ -31,6 +31,8 @@ public:
 
     SegmentedShape* toSegmentedShape() const;
 
+    bool containsPoint(const Point2D& p) const;
+
 protected:
 
     bool isIntersectedByRectangle(const Rectangle* r,
