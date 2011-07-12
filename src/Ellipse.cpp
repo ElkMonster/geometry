@@ -102,8 +102,14 @@ Ellipse::containsPoint(const Point2D& p) const
 {
     CLEAN_IF_DIRTY(this);
 
+    // The following is equivalent to:
+    //
+    //  (p.x - center_.x)^2     (p.y - center_.y)^2
+    // --------------------- + --------------------- <= 1
+    //     radius_.x^2             radius_.y^2
+
     Point2D p0 = (p - center_);
-    p0 = (p0 * p0) / radius_;
+    p0 = (p0 * p0) / (radius_ * radius_);
     return (p0.x + p0.y) <= 1.f;
 }
 

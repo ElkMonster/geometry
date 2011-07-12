@@ -406,7 +406,7 @@ bool
 GenericEllipse::isIntersectedByPoint(const Point2D& p) const
 {
     Point2D p0 = (p - center_);
-    p0 = (p0 * p0) / radius_;
+    p0 = (p0 * p0) / (radius_ * radius_);
     return NEAR_EQUAL(p0.x + p0.y, 1.f);
 }
 
