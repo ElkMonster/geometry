@@ -160,9 +160,10 @@ GenericEllipse::isIntersectedBy(
         fy[i] = roots[i] / scale.y;
     }
 
-    // Handle symmetric case where only one or two roots are found (due to
-    // identical centers)
-    if ((center_ == e->center_) && ((numRoots == 2) || (numRoots == 1)))
+    // Handle symmetric case where only one or two roots are found due to
+    // identical centers, but exclude case of identical ellipses
+    if ((center_ == e->center_) && (radius_ != e->radius_)
+        && ((numRoots == 2) || (numRoots == 1)))
     {
         for (int i = 0; i != numRoots; ++i)
         {
@@ -174,7 +175,8 @@ GenericEllipse::isIntersectedBy(
 
     for (int i = 0; i != numRoots; ++i)
     {
-        SegmentPoint* s = makeSegmentPoint(Point2D(fx[i], fy[i]), e->getQuadrant(*s));
+        Point2D p(fx[i], fy[i]);
+        SegmentPoint* s = makeSegmentPoint(p, e->getQuadrant(p));
         isecPoints.push_back(s);
         ++isecCount;
     }
