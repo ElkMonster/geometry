@@ -102,35 +102,35 @@ GenericEllipse::isIntersectedBy(
 
     double a_squ = r2.x * r2.x;
     double b_squ = r2.y * r2.y;
-    double a_squ_div_b_squ = a_squ / b_squ;
+    double b_squ_div_a_squ = b_squ / a_squ;
     double r_squ = r1.x * r1.x;
-    double c_squ = c*c;
+    double d_squ = d*d;
 
-    // P = a^2 / b^2 - 1
-    double pp = a_squ_div_b_squ - 1.;
-    // Q = -2 * a^2 / b^2 * d
-    double qq = -2. * a_squ_div_b_squ * d;
-    // R = a^2 - r^2 - c^2 -r^2 - d^2 * a^2 / b^2
-    double rr = a_squ - r_squ - c_squ - (d*d) * a_squ_div_b_squ;
+    // P = b^2 / a^2 - 1
+    double pp = b_squ_div_a_squ - 1.;
+    // Q = -2 * b^2 / a^2 * c
+    double qq = -2. * b_squ_div_a_squ * c;
+    // R = r^2 +d^2 - a^2 + b^2 / a^2 *c^2
+    double rr = r_squ + d_squ - a_squ + b_squ_div_a_squ * (c*c);
 
     double qq_squ = qq*qq;
 
     // Formula:
     // 0 =
-    // (P^2)y^4 + (2PQ)y^3 + (Q^2 - 2PR + 4c^2)y^2 + (-2QR)y + R^2 - 4(c^2)(r^2)
+    // (P^2)x^4 + (2PQ)x^3 + (Q^2 + 2PR + 4d^2)x^2 + (2QR)x + R^2 - 4(d^2)(r^2)
 
     // alpha = P^2
     double alpha = pp*pp;
     // beta = 2PQ
     double beta = 2. * pp * qq;
-    // gamma = Q^2 - 2PR + 4c^2
-    double gamma = qq_squ - (2. * pp * rr) + (4. * c_squ);
-    // delta = -2QR
-    double delta = -2. * qq * rr;
-    // epsilon = R^2 - 4(c^2)(r^2)
-    double epsilon = (rr*rr) - (4. * c_squ * r_squ);
+    // gamma = Q^2 + 2PR + 4d^2
+    double gamma = qq_squ + (2. * pp * rr) + (4. * d_squ);
+    // delta = 2QR
+    double delta = 2. * qq * rr;
+    // epsilon = R^2 - 4(d^2)(r^2)
+    double epsilon = (rr*rr) - (4. * d_squ * r_squ);
 
-    // Now solve alpha*y^4 + beta*y^3 + gamma*y^2 + delta*y + epsilon = 0
+    // Now solve alpha*x^4 + beta*x^3 + gamma*x^2 + delta*x + epsilon = 0
     double roots[4];
     int numRoots;
     quarticPolynomialRoots(alpha, beta, gamma, delta, epsilon, roots, numRoots);
@@ -142,9 +142,9 @@ GenericEllipse::isIntersectedBy(
     for (int i = 0; i != numRoots; ++i)
     {
         // x = sqrt(r^2 - y^2)
-        fx[i] = std::sqrt(r_squ - roots[i] * roots[i]) + m1.x;
+        fy[i] = (std::sqrt(r_squ - roots[i] * roots[i]) + m1.y) / scale.y;
         // Rescale and retranslate y to normal coordinate system
-        fy[i] = (roots[i] + m1.y) / scale.y;
+        fx[i] = roots[i] + m1.x;
     }
 
     // Handle identical ellipses case
