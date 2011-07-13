@@ -8,7 +8,7 @@
 #include "Math.h"
 #include "GeometryExceptions.h"
 
-
+#include <iostream>
 
 namespace geom
 {
@@ -64,22 +64,20 @@ GenericEllipse::isIntersectedBy(
 {
     isecCount = 0;
 
-    Point2D scale; // A scale factor that transform the first ellipse into a
-                   // circle in order to simplify calculation
-
-    // Circle (Ellipse 1 transformed along y axis):
-    //     (x - c1)^2 + (y - d1)^2 = r^2
+    // Circle (Ellipse 1 scaled on y axis):
+    //     (I)  (x - m1.x)^2 + (y - m1.y)^2 = r^2
+    //     (II) x^2 + y^2 = r^2  --> moved to origin
     // Ellipse 2:
-    //     (x - c2)^2 / a^2 + (y - d2)^2 / b^2 = 1
-    double c1, c2, d1, d2; // Ellipse parameters
-    double cc, qq, pp, rr; // Factors C, Q, P, R for less complicated formula
-    double alpha, beta, gamma, delta; // Factors for the final equation
+    //     (I)  (x - m2.x)^2 / a^2 + (y - m2.y)^2 / b^2 = 1
+    //     (II) (x - m2.x + m1.x)^2 / a^2 + (y - m2.y + m1.y)^2 / b^2 = 1
+    //           --> moved by the same vector as circle/ellipse 1
 
-    double a_squ, b_squ, d1_squ, a_squ_div_b_squ, r_squ, cc_squ, pp_squ, qq_squ;
-
-    // Make ellipse 1's vertical radius equal to the horizontal one such
-    // that we have a circle, and scale the coordinate system accordingly
-    scale = Point2D(1.f, radius_.x / radius_.y);
+    // A scale factor that transform the first ellipse into a circle in order to
+    // simplify calculation.
+    // For the calculation, make ellipse 1's vertical radius equal to the
+    // horizontal one such that we have a circle, and scale the coordinate
+    // system accordingly
+    Point2D scale(1.f, radius_.x / radius_.y);
     Point2D m1 = center_ * scale;
     Point2D r1 = radius_ * scale;
     Point2D m2 = e->center_ * scale;
@@ -88,65 +86,54 @@ GenericEllipse::isIntersectedBy(
     geom::GenericRect bb1(m1 - r1, m1 + r1);
     geom::GenericRect bb2(m2 - r2, m2 + r2);
 
-    // The rectangle enclosing the area in which the intersection point(s) is (are)
+    // The rectangle enclosing the area in which the intersection point(s) is
+    // (are) located
     GenericRect searchRect;
-    if (!bb1.isIntersectedByRect(bb1, searchRect))
+    if (!bb1.isIntersectedByRect(bb2, searchRect))
     {
         return false;
     }
 
-    c1 = m1.x;
-    d1 = m1.y;
-    c2 = m2.x;
-    d2 = m2.y;
+    // Translate whole coordinate system so ellipse (circle) 1's center is at
+    // origin to simplify our calculation; don't forget to re-translate later.
+    // Ellipse 2 is now: (x - c)^2 / a^2 + (y - d)^2 / b^2 = 1
+    double c = m2.x - m1.x;
+    double d = m2.y - m1.y;
 
-    a_squ = r2.x * r2.x; // a = r2.x
-    b_squ = r2.y * r2.y; // b = r2.y
-    d1_squ = d1*d1;
-    a_squ_div_b_squ = a_squ / b_squ;
-    r_squ = r1.x * r1.x; // r = r1.x
-
-    // C = c1 - c2
-    cc = c1 - c2;
-    cc_squ = cc*cc;
+    double a_squ = r2.x * r2.x;
+    double b_squ = r2.y * r2.y;
+    double a_squ_div_b_squ = a_squ / b_squ;
+    double r_squ = r1.x * r1.x;
+    double c_squ = c*c;
 
     // P = a^2 / b^2 - 1
-    pp = a_squ_div_b_squ - 1.;
-    // Q = 2 * (d1 - a^2 / b^2 * d2)
-    qq = 2. * (d1 - (a_squ_div_b_squ * d2));
-    // R = a^2 - r^2 - C^2 + d1^2 - a^2 / b^2 * d2^2
-    rr = a_squ - r_squ - cc_squ + d1_squ - (a_squ_div_b_squ * (d2*d2));
+    double pp = a_squ_div_b_squ - 1.;
+    // Q = -2 * a^2 / b^2 * d
+    double qq = -2. * a_squ_div_b_squ * d;
+    // R = a^2 - r^2 - c^2 -r^2 - d^2 * a^2 / b^2
+    double rr = a_squ - r_squ - c_squ - (d*d) * a_squ_div_b_squ;
 
-    qq_squ = qq*qq;
+    double qq_squ = qq*qq;
 
-    if (pp != 0)
-    {
-        pp_squ = pp*pp;
+    // Formula:
+    // 0 =
+    // (P^2)y^4 + (2PQ)y^3 + (Q^2 - 2PR + 4c^2)y^2 + (-2QR)y + R^2 - 4(c^2)(r^2)
 
-        // alpha = 2 * Q / P
-        alpha = 2. * qq / pp;
-        // beta = (Q^2 - 2 * P * R + 4 * C^2) / P^2
-        beta = (qq_squ - (2. * pp * rr) + (4. * cc_squ)) / pp_squ;
-        // gamma = -(2 * Q * R + 8 * C^2 * d1) / P^2
-        gamma = -((2. * qq * rr) + (8. * cc_squ * d1)) / pp_squ;
-        // delta = R^2 + 4 * C^2 * (d1^2 - r^2) / P^2
-        delta = ((rr*rr) + (4. * cc_squ * (d1_squ - r_squ))) / pp_squ;
-    }
-    else
-    {
-        alpha = 2. * qq;
-        // beta = (Q^2 - 2 * P * R + 4 * C^2)
-        beta = (qq_squ - (2. * pp * rr) + (4. * cc_squ));
-        // gamma = -(2 * Q * R + 8 * C^2 * d1)
-        gamma = -((2. * qq * rr) + (8. * cc_squ * d1));
-        // delta = R^2 + 4 * C^2 * (d1^2 - r^2)
-        delta = ((rr*rr) + (4. * cc_squ * (d1_squ - r_squ)));
-    };
+    // alpha = P^2
+    double alpha = pp*pp;
+    // beta = 2PQ
+    double beta = 2. * pp * qq;
+    // gamma = Q^2 - 2PR + 4c^2
+    double gamma = qq_squ - (2. * pp * rr) + (4. * c_squ);
+    // delta = -2QR
+    double delta = -2. * qq * rr;
+    // epsilon = R^2 - 4(c^2)(r^2)
+    double epsilon = (rr*rr) - (4. * c_squ * r_squ);
 
-    // Now solve y^4 + alpha*y^3 + beta*y^2 + gamma*y + delta = 0
+    // Now solve alpha*y^4 + beta*y^3 + gamma*y^2 + delta*y + epsilon = 0
     double roots[4];
     int numRoots;
-    quarticPolynomialRoots(alpha, beta, gamma, delta, roots, numRoots);
+    quarticPolynomialRoots(alpha, beta, gamma, delta, epsilon, roots, numRoots);
 
 
     float fx[4];
@@ -154,25 +141,36 @@ GenericEllipse::isIntersectedBy(
 
     for (int i = 0; i != numRoots; ++i)
     {
-        // x = sqrt(r^2 - (y - d1)^2) + c1
-        fx[i] = sqrt(r_squ - ((roots[i] - d1) * (roots[i] - d1))) + c1;
-        // Rescale y to normal coordinate system
-        fy[i] = roots[i] / scale.y;
+        // x = sqrt(r^2 - y^2)
+        fx[i] = std::sqrt(r_squ - roots[i] * roots[i]) + m1.x;
+        // Rescale and retranslate y to normal coordinate system
+        fy[i] = (roots[i] + m1.y) / scale.y;
     }
 
-    // Handle symmetric case where only one or two roots are found due to
-    // identical centers, but exclude case of identical ellipses
-    if ((center_ == e->center_) && (radius_ != e->radius_)
-        && ((numRoots == 2) || (numRoots == 1)))
+    // Handle identical ellipses case
+    if ((center_ == e->center_) && (radius_ == e->radius_))
     {
-        for (int i = 0; i != numRoots; ++i)
-        {
-            fx[i + numRoots] = -fx[i];
-            fy[i + numRoots] = -fy[i];
-        }
-        numRoots *= 2;
+        numRoots = 1;
+        fx[0] = center_.x;
+        fy[0] = center_.y + radius_.y;
     }
 
+    // symmetric case where only one or two roots are found due to
+    // identical centers, but exclude case of identical ellipses
+    /*if ((numRoots == 2) && (radius_ != e->radius_)
+        {
+            if ((numRoots == 2) || (numRoots == 1))
+            {
+                for (int i = 0; i != numRoots; ++i)
+                {
+                    fx[i + numRoots] = -fx[i];
+                    fy[i + numRoots] = -fy[i];
+                }
+                numRoots *= 2;
+            }
+        }
+    }
+*/
     for (int i = 0; i != numRoots; ++i)
     {
         Point2D p(fx[i], fy[i]);
@@ -359,8 +357,11 @@ GenericEllipse::makeSegmentPoint(
     }
     else
     {
-        throw error::ConsistencyError(
-            "GenericEllipse::makeSegmentPoint: Point is not part of parent2");
+        //throw error::ConsistencyError(
+        std::cout <<
+            "GenericEllipse::makeSegmentPoint: Point is not part of parent2 t2=" << t2 << std::endl; // );
+        const GenericArc* parent = getQuadrant(p);
+        return new SegmentPoint(p, parent->getT(p), parent, t2, parent2);
     }
 }
 
