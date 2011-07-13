@@ -313,33 +313,55 @@ void
 quadraticPolynomialRoots(
     double a,
     double b,
+    double c,
     complex roots[2],
     int& numRealRoots,
     int& numComplexRoots)
 {
+    numRealRoots = 0;
+    numComplexRoots = 0;
+
+    if (a == 0.)
+    {
+        if (b == 0.)
+        {
+            return;
+        }
+
+        roots[0] = complex(-c / b, 0.);
+        numRealRoots = 1;
+        return;
+    }
+
+    // Initial equation: ax^2 + bx + c = 0
+    // Transform to: x^2 + (a')x + b' = 0
+    double at = a;
+    a = b / at;
+    b = c / at;
+
     // x1,2 = -a/2 +- sqrt((a/2)^2 - b)
 
-    double c = 0.5 * a;
-    double r = c*c - b;
+    double h = a / 2;
+    double r = h*h - b;
     if (r > 0.)
     {
         double rsqrt = std::sqrt(r);
-        roots[0] = complex(-c + rsqrt, 0.);
-        roots[1] = complex(-c - rsqrt, 0.);
+        roots[0] = complex(-h + rsqrt, 0.);
+        roots[1] = complex(-h - rsqrt, 0.);
         numRealRoots = 2;
         numComplexRoots = 0;
     }
     else if (r == 0.)
     {
-        roots[0] = complex(-c, 0.);
+        roots[0] = complex(-h, 0.);
         numRealRoots = 1;
         numComplexRoots = 0;
     }
     else
     {
         double rsqrt = std::sqrt(-r);
-        roots[0] = complex(-c, rsqrt);
-        roots[1] = complex(-c, -rsqrt);
+        roots[0] = complex(-h, rsqrt);
+        roots[1] = complex(-h, -rsqrt);
         numRealRoots = 0;
         numComplexRoots = 2;
     }
@@ -354,6 +376,7 @@ quarticPolynomialRoots(
     double b,
     double c,
     double d,
+    double e,
     complex roots[4],
     int& numRealRoots,
     int& numComplexRoots)
@@ -361,7 +384,19 @@ quarticPolynomialRoots(
     numRealRoots = 0;
     numComplexRoots = 0;
 
-    // Initial equation: x^4 + ax^3 + bx^2 +cx + d = 0
+    if (a == 0.)
+    {
+        cubicPolynomialRoots(b, c, d, e, roots, numRealRoots, numComplexRoots);
+        return;
+    }
+
+    // Initial equation: ax^4 + bx^3 + cx^2 + dx + e = 0
+    // Transform to: x^4 + (a')x^3 + (b')x^2 + (c')x + d' = 0
+    double at = a;
+    a = b / at;
+    b = c / at;
+    c = d / at;
+    d = e / at;
 
     // Substitution: x = y - a / 4, we get y^4 + py^2 + qy + r = 0
 
@@ -383,7 +418,7 @@ quarticPolynomialRoots(
     {
         complex zRoots[2];
         int numRealZRoots, numComplexZRoots;
-        quadraticPolynomialRoots(b, d, zRoots, numRealZRoots, numComplexZRoots);
+        quadraticPolynomialRoots(1., b, d, zRoots, numRealZRoots, numComplexZRoots);
 
         int count = 0;
         for (int i = 0; i != numRealZRoots + numComplexZRoots; ++i)
@@ -434,7 +469,7 @@ quarticPolynomialRoots(
     double cuA = -2. * p;
     double cuB = p*p - 4. * r;
     double cuC = q*q;
-    cubicPolynomialRoots(cuA, cuB, cuC, zRoots, numRealZRoots, numComplexZRoots);
+    cubicPolynomialRoots(1., cuA, cuB, cuC, zRoots, numRealZRoots, numComplexZRoots);
 
 
     complex zsqrt[3];
@@ -482,13 +517,14 @@ void quarticPolynomialRoots(
     double b,
     double c,
     double d,
+    double e,
     double roots[4],
     int& numRoots
 )
 {
     complex croots[4];
     int numComplexRoots;
-    quarticPolynomialRoots(a, b, c, d, croots, numRoots, numComplexRoots);
+    quarticPolynomialRoots(a, b, c, d, e, croots, numRoots, numComplexRoots);
     for (int i = 0; i != numRoots; ++i)
     {
         roots[i] = croots[i].real();
@@ -501,6 +537,7 @@ cubicPolynomialRoots(
     double r,
     double s,
     double t,
+    double u,
     complex roots[3],
     int& numRealRoots,
     int& numComplexRoots
@@ -509,7 +546,19 @@ cubicPolynomialRoots(
     numRealRoots = 0;
     numComplexRoots = 0;
 
-    // Normal form: x^3 + rx^2 + sx + t = 0
+    if (r == 0.)
+    {
+        quadraticPolynomialRoots(s, t, u, roots, numRealRoots, numComplexRoots);
+        return;
+    }
+
+    // Initial equation: rx^3 + sx^2 + tx + u = 0
+    // Transform to: x^3 + (r')x^2 + (s')x + t' = 0
+    double rt = r;
+    r = s / rt;
+    s = t / rt;
+    t = u / rt;
+
     // Substitution: x = z - r / 3 leads to: z^3 + pz + q = 0
 
     double r2 = r*r;
@@ -531,14 +580,14 @@ cubicPolynomialRoots(
     if (d > 0.)
     {
         double dsqrt = std::sqrt(d);
-        double u = cubicRoot(-q * 0.5 + dsqrt);
-        double v = cubicRoot(-q * 0.5 - dsqrt);
-        double uv1 = -0.5 * (u + v);
-        double uv2 = 0.5 * (u - v) * std::sqrt(3);
+        double a = cubicRoot(-q * 0.5 + dsqrt);
+        double b = cubicRoot(-q * 0.5 - dsqrt);
+        double ab1 = -0.5 * (a + b);
+        double ab2 = 0.5 * (a - b) * std::sqrt(3);
 
-        z[0] = u + v;
-        z[1] = complex(uv1, uv2);
-        z[2] = complex(uv1, -uv2);
+        z[0] = a + b;
+        z[1] = complex(ab1, ab2);
+        z[2] = complex(ab1, -ab2);
         numRealRoots = 1;
         numComplexRoots = 2;
     }
@@ -577,12 +626,13 @@ void cubicPolynomialRoots(
     double r,
     double s,
     double t,
+    double u,
     double roots[3],
     int& numRoots)
 {
     complex croots[3];
     int numComplexRoots;
-    cubicPolynomialRoots(r, s, t, croots, numRoots, numComplexRoots);
+    cubicPolynomialRoots(r, s, t, u, croots, numRoots, numComplexRoots);
     for (int i = 0; i != numRoots; ++i)
     {
         roots[i] = croots[i].real();

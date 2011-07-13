@@ -80,6 +80,7 @@ bool bisectRoot(const Func& func,
 void cubicPolynomialRoots(double r,
                           double s,
                           double t,
+                          double u,
                           std::complex<double> roots[3],
                           int& numRealRoots,
                           int& numComplexRoots);
@@ -88,6 +89,7 @@ void cubicPolynomialRoots(double r,
 void cubicPolynomialRoots(double r,
                           double s,
                           double t,
+                          double u,
                           double roots[3],
                           int& numRoots);
 
@@ -99,6 +101,7 @@ void quarticPolynomialRoots(double a,
                             double b,
                             double c,
                             double d,
+                            double e,
                             std::complex<double> roots[4],
                             int& numRealRoots,
                             int& numComplexRoots);
@@ -108,6 +111,7 @@ void quarticPolynomialRoots(double a,
                             double b,
                             double c,
                             double d,
+                            double e,
                             double roots[4],
                             int& numRoots);
 
