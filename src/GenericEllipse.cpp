@@ -69,7 +69,7 @@ GenericEllipse::isIntersectedBy(
     //     (II) x^2 + y^2 = r^2  --> moved to origin
     // Ellipse 2:
     //     (I)  (x - m2.x)^2 / a^2 + (y - m2.y)^2 / b^2 = 1
-    //     (II) (x - m2.x + m1.x)^2 / a^2 + (y - m2.y + m1.y)^2 / b^2 = 1
+    //     (II) (x - (m2.x - m1.x))^2 / a^2 + (y - (m2.y - m1.y))^2 / b^2 = 1
     //           --> moved by the same vector as circle/ellipse 1
 
     // A scale factor that transform the first ellipse into a circle in order to
@@ -110,8 +110,8 @@ GenericEllipse::isIntersectedBy(
     double pp = b_squ_div_a_squ - 1.;
     // Q = -2 * b^2 / a^2 * c
     double qq = -2. * b_squ_div_a_squ * c;
-    // R = r^2 +d^2 - a^2 + b^2 / a^2 *c^2
-    double rr = r_squ + d_squ - a_squ + b_squ_div_a_squ * (c*c);
+    // R = r^2 + d^2 - b^2 + b^2 / a^2 *c^2
+    double rr = r_squ + d_squ - b_squ + b_squ_div_a_squ * (c*c);
 
     double qq_squ = qq*qq;
 
@@ -136,14 +136,12 @@ GenericEllipse::isIntersectedBy(
     quarticPolynomialRoots(alpha, beta, gamma, delta, epsilon, roots, numRoots);
 
 
-    float fx[4];
-    float fy[4];
-
+    float fx[4], fy[4];
     for (int i = 0; i != numRoots; ++i)
     {
-        // x = sqrt(r^2 - y^2)
-        fy[i] = (std::sqrt(r_squ - roots[i] * roots[i]) + m1.y) / scale.y;
         // Rescale and retranslate y to normal coordinate system
+        // y = sqrt(r^2 - x^2)
+        fy[i] = (std::sqrt(r_squ - roots[i] * roots[i]) + m1.y) / scale.y;
         fx[i] = roots[i] + m1.x;
     }
 
@@ -154,23 +152,36 @@ GenericEllipse::isIntersectedBy(
         fx[0] = center_.x;
         fy[0] = center_.y + radius_.y;
     }
-
-    // symmetric case where only one or two roots are found due to
-    // identical centers, but exclude case of identical ellipses
-    /*if ((numRoots == 2) && (radius_ != e->radius_)
+    // Handle symmetric case where every x corresponds to two roots (x, +-y).
+    // For some cases (two circles intersecting only, it seems), only one or two
+    // roots will be found by solving the polynomial, so we have to add the
+    // missing roots.
+    else if ((center_.y == e->center_.y) && ((numRoots == 1) || (numRoots == 2)))
+    {
+        std::cout << "numroots "<< numRoots << std::endl;
+        for (int i = 0; i != numRoots; ++i)
         {
-            if ((numRoots == 2) || (numRoots == 1))
+            fx[i + numRoots] = fx[i];
+            fy[i + numRoots] = 2. * center_.y - fy[i];
+        }
+        numRoots *= 2;
+    }
+    else
+    {
+        // Check if points are valid; for those that are not, we assume that
+        // their y coordinate is on the wrong side of the x axis, so mirror it
+        // along that axis. If the point is invalid in general,
+        // makeSegmentPoint() will finally fail (see below).
+        for (int i = 0; i != numRoots; ++i)
+        {
+            Point2D p(fx[i], fy[i]);
+            if (!e->isIntersectedByPoint(p))
             {
-                for (int i = 0; i != numRoots; ++i)
-                {
-                    fx[i + numRoots] = -fx[i];
-                    fy[i + numRoots] = -fy[i];
-                }
-                numRoots *= 2;
+                fy[i] = 2. * center_.y - fy[i];
             }
         }
     }
-*/
+
     for (int i = 0; i != numRoots; ++i)
     {
         Point2D p(fx[i], fy[i]);
@@ -357,11 +368,8 @@ GenericEllipse::makeSegmentPoint(
     }
     else
     {
-        //throw error::ConsistencyError(
-        std::cout <<
-            "GenericEllipse::makeSegmentPoint: Point is not part of parent2 t2=" << t2 << std::endl; // );
-        const GenericArc* parent = getQuadrant(p);
-        return new SegmentPoint(p, parent->getT(p), parent, t2, parent2);
+        throw error::ConsistencyError(
+            "GenericEllipse::makeSegmentPoint: Point is not part of parent2");
     }
 }
 
