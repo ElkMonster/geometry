@@ -12,7 +12,7 @@ namespace geom
 
 // "virtual" allows for derived classes that inherit from this and other
 // Dirtable derivatives. If "virtual" is not specified, then the compiler will
-// fail due to ambiguous calls since there're more than one instances of
+// fail due to ambiguous calls since there's more than one instance of
 // Dirtable in the derived class then.
 class GenericEllipse //: virtual public Dirtable
 {
@@ -47,7 +47,11 @@ public:
 
     const Point2D& center() const;
 
+    void center(const Point2D& center);
+
     const Point2D& radius() const;
+
+    void radius(const Point2D& radius);
 
     const GenericArc* getQuadrant(const Point2D& p) const;
 

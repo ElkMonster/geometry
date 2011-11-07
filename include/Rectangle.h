@@ -23,6 +23,8 @@ public:
 
 public:
 
+    void p1p2(const Point2D& p1, const Point2D& p2);
+
     void performCleaning() const;
 
     void calculateBoundingBox(GenericRect& bb) const;

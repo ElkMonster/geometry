@@ -49,10 +49,24 @@ GenericEllipse::center() const
 }
 
 
+void
+GenericEllipse::center(const Point2D& center)
+{
+    center_ = center;
+}
+
+
 const Point2D&
 GenericEllipse::radius() const
 {
     return radius_;
+}
+
+
+void
+GenericEllipse::radius(const Point2D& radius)
+{
+    radius_ = radius;
 }
 
 

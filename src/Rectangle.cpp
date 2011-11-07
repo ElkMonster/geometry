@@ -26,6 +26,15 @@ Rectangle::~Rectangle()
 
 
 void
+Rectangle::p1p2(const Point2D& p1, const Point2D& p2)
+{
+    r_.p1(p1);
+    r_.p2(p2);
+    dirty_ = true;
+}
+
+
+void
 Rectangle::performCleaning() const
 {
     r_.makeClean();
