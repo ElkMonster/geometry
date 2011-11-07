@@ -35,6 +35,8 @@ public:
 
     Point2D& operator/=(float divisor);
 
+    const Point2D operator-() const;
+
     const Point2D operator+(const Point2D& other) const;
 
     const Point2D operator-(const Point2D& other) const;

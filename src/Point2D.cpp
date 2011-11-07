@@ -96,6 +96,13 @@ Point2D::operator/=(float divisor)
 
 
 const Point2D
+Point2D::operator-() const
+{
+    return Point2D(-x, -y);
+}
+
+
+const Point2D
 Point2D::operator+(const Point2D& other) const
 {
     return Point2D(*this) += other;
