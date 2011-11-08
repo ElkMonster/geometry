@@ -227,7 +227,10 @@ GenericLine::containsPoint(const Point2D& p, float& t) const
     }
 
     // (IV)  p.y = p1.y + t * (p2.y - p1.y)
-    return (between(t, 0.f, 1.f) && NEAR_EQUAL(p1_.y + t * vec_.y, p.y));
+    // The NEAR_EQUAL check is not necessary here and error prone due to
+    // rounding errors (so remove that commented line some day?!)
+    //return (between(t, 0.f, 1.f) && NEAR_EQUAL(p1_.y + t * vec_.y, p.y));
+    return between(t, 0.f, 1.f);
 }
 
 
