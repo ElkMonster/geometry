@@ -72,7 +72,6 @@
 		<Unit filename="src/GenericEllipse.cpp" />
 		<Unit filename="src/GenericLine.cpp" />
 		<Unit filename="src/GenericRect.cpp" />
-		<Unit filename="src/GenericShapeElement.cpp" />
 		<Unit filename="src/LineBasedShape.cpp" />
 		<Unit filename="src/LineSegment.cpp" />
 		<Unit filename="src/Math.cpp" />
