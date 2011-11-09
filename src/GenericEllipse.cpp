@@ -382,6 +382,7 @@ GenericEllipse::makeSegmentPoint(
     }
     else
     {
+        parent2->containsPoint(p, t2);
         throw error::ConsistencyError(
             "GenericEllipse::makeSegmentPoint: Point is not part of parent2");
     }
