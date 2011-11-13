@@ -10,11 +10,7 @@ namespace geom
 {
 
 
-// "virtual" allows for derived classes that inherit from this and other
-// Dirtable derivatives. If "virtual" is not specified, then the compiler will
-// fail due to ambiguous calls since there's more than one instance of
-// Dirtable in the derived class then.
-class GenericEllipse //: virtual public Dirtable
+class GenericEllipse : public Dirtable
 {
 
 public:

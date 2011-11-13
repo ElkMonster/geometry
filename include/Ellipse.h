@@ -10,7 +10,7 @@ namespace geom
 {
 
 
-class Ellipse : public GenericEllipse, public Shape
+class Ellipse : virtual public GenericEllipse, public Shape
 {
 
 public:

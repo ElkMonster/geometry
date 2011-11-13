@@ -38,6 +38,7 @@ GenericEllipse&
 GenericEllipse::moveBy(const Point2D& delta)
 {
     center_ += delta;
+    dirty_ = true;
     return *this;
 }
 
@@ -53,6 +54,7 @@ void
 GenericEllipse::center(const Point2D& center)
 {
     center_ = center;
+    dirty_ = true;
 }
 
 
@@ -67,6 +69,7 @@ void
 GenericEllipse::radius(const Point2D& radius)
 {
     radius_ = radius;
+    dirty_ = true;
 }
 
 

@@ -9,6 +9,15 @@
 #include "Helpers.h"
 #include <cmath>
 
+
+#define ELLIPSE_CLEAN_IF_DIRTY(pdirtable)   \
+    if (GenericEllipse::dirty_)             \
+    {                                       \
+        Shape::dirty_ = true;               \
+        Shape::makeClean();                 \
+    }
+
+
 namespace geom
 {
 
@@ -32,7 +41,7 @@ Ellipse::~Ellipse()
 void
 Ellipse::performCleaning() const
 {
-    // Nothing to do here
+    // Nothing to do here, since radius and center are always up to date
 }
 
 void
@@ -47,7 +56,7 @@ void
 Ellipse::moveBy(const Point2D& delta)
 {
     GenericEllipse::moveBy(delta);
-    dirty_ = true;
+    GenericEllipse::dirty_ = true;
 }
 
 
@@ -78,7 +87,7 @@ Ellipse::isIntersectedByEllipse(
 SegmentedShape*
 Ellipse::toSegmentedShape() const
 {
-    CLEAN_IF_DIRTY(this);
+    ELLIPSE_CLEAN_IF_DIRTY(this);
 
     SegmentPoint sp[] = {
         SegmentPoint(center_ + Point2D(0, radius_.y), 0.f, &quadrant_[0]),
@@ -100,7 +109,7 @@ Ellipse::toSegmentedShape() const
 bool
 Ellipse::containsPoint(const Point2D& p) const
 {
-    CLEAN_IF_DIRTY(this);
+    ELLIPSE_CLEAN_IF_DIRTY(this);
 
     // The following is equivalent to:
     //
@@ -120,6 +129,8 @@ Ellipse::isIntersectedByLineBasedShape(
     SegmentPointVector& isecPoints,
     int& isecCount) const
 {
+    ELLIPSE_CLEAN_IF_DIRTY(this);
+
     if (!bb().isIntersectedByRect(s->bb()))
     {
         isecCount = 0;
