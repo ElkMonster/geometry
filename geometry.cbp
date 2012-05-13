@@ -6,7 +6,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="libgeometry" prefix_auto="1" extension_auto="1" />
+				<Option output="geometry" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj/Debug/" />
 				<Option type="2" />
@@ -21,7 +21,7 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="libgeometry" prefix_auto="1" extension_auto="1" />
+				<Option output="geometry" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj/Release/" />
 				<Option type="2" />
@@ -55,10 +55,10 @@
 		<Unit filename="include/Limits.h" />
 		<Unit filename="include/LineBasedShape.h" />
 		<Unit filename="include/LineSegment.h" />
-		<Unit filename="include/Math.h" />
 		<Unit filename="include/Point2D.h" />
 		<Unit filename="include/PointerAllocator.h" />
 		<Unit filename="include/Rectangle.h" />
+		<Unit filename="include/RootSolvers.h" />
 		<Unit filename="include/Segment.h" />
 		<Unit filename="include/SegmentPoint.h" />
 		<Unit filename="include/SegmentPointVector.h" />
@@ -74,9 +74,9 @@
 		<Unit filename="src/GenericRect.cpp" />
 		<Unit filename="src/LineBasedShape.cpp" />
 		<Unit filename="src/LineSegment.cpp" />
-		<Unit filename="src/Math.cpp" />
 		<Unit filename="src/Point2D.cpp" />
 		<Unit filename="src/Rectangle.cpp" />
+		<Unit filename="src/RootSolvers.cpp" />
 		<Unit filename="src/Segment.cpp" />
 		<Unit filename="src/SegmentPoint.cpp" />
 		<Unit filename="src/SegmentPointVector.cpp" />
