@@ -5,7 +5,7 @@
 //#include "Point2D.h"
 #include "GenericRect.h"
 #include "SegmentPoint.h"
-#include "Math.h"
+#include "RootSolvers.h"
 #include "GeometryExceptions.h"
 
 #include <iostream>

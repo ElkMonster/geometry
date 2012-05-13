@@ -1,5 +1,5 @@
-#ifndef MATH_H_
-#define MATH_H_
+#ifndef ROOTSOLVERS_H_
+#define ROOTSOLVERS_H_
 
 #include <complex>
 
@@ -138,6 +138,6 @@ bool findQuarticRoots(
 
 } // namespace geom
 
-#endif // MATH_H_
+#endif // ROOTSOLVERS_H_
 
 
