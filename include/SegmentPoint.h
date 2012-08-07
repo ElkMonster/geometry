@@ -1,7 +1,7 @@
 #ifndef SEGMENTPOINT_H_
 #define SEGMENTPOINT_H_
 
-#include "Point2D.h"
+#include <Point2D.h>
 #include "GenericShapeElement.h"
 
 namespace geom

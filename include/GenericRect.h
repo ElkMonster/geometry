@@ -1,7 +1,7 @@
 #ifndef GENERICRECT_H_
 #define GENERICRECT_H_
 
-#include "Point2D.h"
+#include <Point2D.h>
 #include "SegmentPoint.h"
 #include "GenericLine.h"
 #include "Dirtable.h"

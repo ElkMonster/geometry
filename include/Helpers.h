@@ -1,7 +1,7 @@
 #ifndef HELPERS_H_
 #define HELPERS_H_
 
-#include "Point2D.h"
+#include <Point2D.h>
 #include "SegmentPoint.h"
 
 namespace geom

@@ -1,7 +1,7 @@
 #ifndef GENERICSHAPEELEMENT_H_
 #define GENERICSHAPEELEMENT_H_
 
-#include "Point2D.h"
+#include <Point2D.h>
 
 namespace geom
 {

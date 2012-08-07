@@ -1,7 +1,7 @@
 #ifndef GENERICELLIPSE_H_
 #define GENERICELLIPSE_H_
 
-#include "Point2D.h"
+#include <Point2D.h>
 #include "SegmentPointVector.h"
 #include "GenericLine.h"
 #include "GenericArc.h"
