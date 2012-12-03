@@ -130,16 +130,19 @@ findChangeOfSign(
     double y = func(x);
 
     bool success = false;
+    double subrange[2];
+    subrange[0] = x + step;
+    subrange[1] = range[1];
     if (y > 0.)
     {
-        success = findNegative(func, (double[]) { x + step, range[1] }, step, neg);
+        success = findNegative(func, subrange, step, neg);
         pos.x = neg.x - step;
         pos.y = func(pos.x);
 
     }
     else if (y < 0.)
     {
-        success = findPositive(func, (double[]) { x + step, range[1] }, step, pos);
+        success = findPositive(func, subrange, step, pos);
         neg.x = pos.x - step;
         neg.y = func(neg.x);
     }
