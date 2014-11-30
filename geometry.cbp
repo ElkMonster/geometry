@@ -19,6 +19,9 @@
 					<Add option="-fPIC" />
 					<Add directory="../geometry" />
 				</Compiler>
+				<Linker>
+					<Add library="../Point2D/bin/Debug/libPoint2D.so" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="geometry" prefix_auto="1" extension_auto="1" />
@@ -34,6 +37,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add library="../Point2D/bin/Release/libPoint2D.so" />
 				</Linker>
 			</Target>
 		</Build>
